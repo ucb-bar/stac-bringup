@@ -355,6 +355,17 @@ class WithSerialTLPunchthrough extends OverrideIOBinder({
   }
 })
 
+class WithStacControllerPunchthrough extends OverrideIOBinder({
+  (system: CanHavePeripheryStacControllerModuleImp) => {
+    val (ports, cells) = system.stacControllerIO.map({ s =>
+      val port = IO(chiselTypeOf(s.getWrappedValue))
+      port <> s.getWrappedValue
+      (StacControllerPort(() => port), Nil)
+    }).unzip
+    (ports.toSeq, cells.flatten.toSeq)
+  }
+})
+
 class WithAXI4MemPunchthrough extends OverrideLazyIOBinder({
   (system: CanHaveMasterAXI4MemPort) => {
     implicit val p: Parameters = GetSystemParameters(system)

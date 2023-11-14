@@ -71,6 +71,9 @@ case class JTAGPort        (val getIO: () => JTAGChipIO)
 case class SerialTLPort    (val getIO: () => ClockedIO[SerialIO], val params: SerialTLParams, val serdesser: TLSerdesser, val portId: Int)
     extends Port[ClockedIO[SerialIO]]
 
+case class StacControllerPort    (val getIO: () => StacControllerTopIO)
+    extends Port[StacControllerTopIO]
+
 case class UARTTSIPort     (val getIO: () => UARTTSIIO)
     extends Port[UARTTSIIO]
 
