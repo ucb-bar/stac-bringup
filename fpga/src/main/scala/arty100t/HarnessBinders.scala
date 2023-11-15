@@ -58,13 +58,13 @@ class WithArty100TSerialTLToGPIO extends HarnessBinder({
       ("D12", IOPin(harnessIO.bits.in.valid)),
       ("D13", IOPin(harnessIO.bits.in.ready)),
       ("B18", IOPin(harnessIO.bits.out.bits, 0)),
-      ("A18", IOPin(harnessIO.bits.out.bits, 1)),
-      ("K16", IOPin(harnessIO.bits.out.bits, 2)),
-      ("E15", IOPin(harnessIO.bits.out.bits, 3)),
+      // ("A18", IOPin(harnessIO.bits.out.bits, 1)),
+      // ("K16", IOPin(harnessIO.bits.out.bits, 2)),
+      // ("E15", IOPin(harnessIO.bits.out.bits, 3)),
       ("E16", IOPin(harnessIO.bits.in.bits, 0)),
-      ("D15", IOPin(harnessIO.bits.in.bits, 1)),
-      ("C15", IOPin(harnessIO.bits.in.bits, 2)),
-      ("J17", IOPin(harnessIO.bits.in.bits, 3))
+      // ("D15", IOPin(harnessIO.bits.in.bits, 1)),
+      // ("C15", IOPin(harnessIO.bits.in.bits, 2)),
+      // ("J17", IOPin(harnessIO.bits.in.bits, 3))
     )
     packagePinsWithPackageIOs foreach { case (pin, io) => {
       artyTh.xdc.addPackagePin(io, pin)
