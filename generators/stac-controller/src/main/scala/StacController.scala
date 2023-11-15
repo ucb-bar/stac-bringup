@@ -55,8 +55,10 @@ class StacController()(implicit p: Parameters) extends Module {
   io.top.pllScanEn := io.mmio.pllScanEn.q
   io.top.pllScanRst := io.mmio.pllScanRst.q
   io.top.pllScanClk := io.mmio.pllScanClk.q
-  io.top.pllScanIn := io.mmio.pllScanIn.q
-  io.top.pllArstb := io.mmio.pllArstb.q
+  // io.top.pllScanIn := io.mmio.pllScanIn.q
+  io.top.pllScanIn := true.B // for testing purposes
+  // io.top.pllArstb := io.mmio.pllArstb.q
+  io.top.pllArstb := false.B // for testing purposes
   io.top.customBoot := io.mmio.customBoot.q
   io.mmio.sramScanOut.d := io.top.sramScanOut
   io.mmio.sramBistDone.d := io.top.sramBistDone

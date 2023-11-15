@@ -27,6 +27,8 @@ import testchipip._
 import icenet.{CanHavePeripheryIceNIC, SimNetwork, NicLoopback, NICKey, NICIOvonly}
 import chipyard.{CanHaveMasterTLMemPort, ChipyardSystem, ChipyardSystemModule}
 
+import staccontroller.{HasPeripheryStacControllerModuleImp, StacControllerTopIO}
+
 import scala.reflect.{ClassTag}
 
 object IOBinderTypes {
@@ -356,13 +358,12 @@ class WithSerialTLPunchthrough extends OverrideIOBinder({
 })
 
 class WithStacControllerPunchthrough extends OverrideIOBinder({
-  (system: CanHavePeripheryStacControllerModuleImp) => {
-    val (ports, cells) = system.stacControllerIO.map({ s =>
-      val port = IO(chiselTypeOf(s.getWrappedValue))
-      port <> s.getWrappedValue
-      (StacControllerPort(() => port), Nil)
-    }).unzip
-    (ports.toSeq, cells.flatten.toSeq)
+  (system: HasPeripheryStacControllerModuleImp) => {
+    system.stacControllerIO.map({ stacControllerIO => 
+      val port = IO(new StacControllerTopIO).suggestName("stac_controller")
+      port <> stacControllerIO
+      (Seq(StacControllerPort(() => port)), Nil)
+    }).getOrElse((Nil, Nil))
   }
 })
 

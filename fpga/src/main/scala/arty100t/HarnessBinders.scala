@@ -102,10 +102,10 @@ class WithArty100TStacControllerToGPIO extends HarnessBinder({
       ("T13", IOPin(harnessIO.pllScanRst)),
       ("U13", IOPin(harnessIO.pllScanClk)),
       ("D4", IOPin(harnessIO.pllScanIn)),
-      ("D3", IOPin(harnessIO.pllArstb))
-      ("F4", IOPin(harnessIO.customBoot))
-      ("F3", IOPin(harnessIO.sramScanOut))
-      ("E2", IOPin(harnessIO.sramBistDone))
+      ("D3", IOPin(harnessIO.pllArstb)),
+      ("F4", IOPin(harnessIO.customBoot)),
+      ("F3", IOPin(harnessIO.sramScanOut)),
+      ("E2", IOPin(harnessIO.sramBistDone)),
       ("D2", IOPin(harnessIO.pllScanOut))
     )
     packagePinsWithPackageIOs foreach { case (pin, io) => {

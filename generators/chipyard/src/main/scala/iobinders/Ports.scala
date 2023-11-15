@@ -15,6 +15,8 @@ import freechips.rocketchip.devices.debug.{ClockedDMIIO}
 import freechips.rocketchip.util.{HeterogeneousBag}
 import freechips.rocketchip.tilelink.{TLBundle}
 
+import staccontroller.{StacControllerTopIO}
+
 trait Port[T <: Data] {
   val getIO: () => T
   // port.io should only be called in the TestHarness context
