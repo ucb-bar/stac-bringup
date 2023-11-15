@@ -57,6 +57,9 @@ class STACBringupHostConfig extends Config(
   new chipyard.harness.WithSimTSIToUARTTSI ++                       // Attach SimTSI-over-UART to the UART-TSI port
   new chipyard.iobinders.WithSerialTLPunchthrough ++                // Don't generate IOCells for the serial TL (this design maps to FPGA)
   new chipyard.iobinders.WithStacControllerPunchthrough ++                // Don't generate IOCells for the STAC controller (this design maps to FPGA)
+  new staccontroller.WithStacControllerLocation(SBUS) ++ // See clocking
+  new staccontroller.WithStacControllerCrossingType(SynchronousCrossing()) ++
+  new staccontroller.WithStacController(staccontroller.StacControllerParams()) ++ // add STAC Controller peripheral
 
   //=============================
   // Setup the SerialTL side on the bringup device
@@ -64,7 +67,7 @@ class STACBringupHostConfig extends Config(
   new testchipip.WithSerialTLWidth(1) ++                                       // match width with the chip
   new testchipip.WithSerialTLMem(base = 0x0, size = 0x80000000L,               // accessible memory of the chip that doesn't come from the tethered host
                                  idBits = 4, isMainMemory = false) ++          // This assumes off-chip mem starts at 0x8000_0000
-  new testchipip.WithSerialTLClockDirection(provideClockFreqMHz = Some(50)) ++ // bringup board drives the clock for the serial-tl receiver on the chip, use 75MHz clock
+  new testchipip.WithSerialTLClockDirection ++ // bringup board drives the clock for the serial-tl receiver on the chip, use 75MHz clock
 
   //============================
   // Setup bus topology on the bringup system

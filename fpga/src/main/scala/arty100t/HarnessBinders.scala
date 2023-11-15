@@ -48,23 +48,17 @@ class WithArty100TDDRTL extends HarnessBinder({
 class WithArty100TSerialTLToGPIO extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: SerialTLPort) => {
     val artyTh = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
-    val harnessIO = IO(port.io.cloneType).suggestName("serial_tl")
+    val harnessIO = IO(chiselTypeOf(port.io)).suggestName("serial_tl")
     harnessIO <> port.io
     val clkIO = IOPin(harnessIO.clock)
     val packagePinsWithPackageIOs = Seq(
-      ("G13", clkIO),
+      ("G13", IOPin(harnessIO.bits.out.ready)),
       ("B11", IOPin(harnessIO.bits.out.valid)),
-      ("A11", IOPin(harnessIO.bits.out.ready)),
-      ("D12", IOPin(harnessIO.bits.in.valid)),
-      ("D13", IOPin(harnessIO.bits.in.ready)),
+      ("A11", IOPin(harnessIO.bits.in.ready)),
+      ("D12", IOPin(harnessIO.bits.in.bits, 0)),
+      ("D13", clkIO),
       ("B18", IOPin(harnessIO.bits.out.bits, 0)),
-      // ("A18", IOPin(harnessIO.bits.out.bits, 1)),
-      // ("K16", IOPin(harnessIO.bits.out.bits, 2)),
-      // ("E15", IOPin(harnessIO.bits.out.bits, 3)),
-      ("E16", IOPin(harnessIO.bits.in.bits, 0)),
-      // ("D15", IOPin(harnessIO.bits.in.bits, 1)),
-      // ("C15", IOPin(harnessIO.bits.in.bits, 2)),
-      // ("J17", IOPin(harnessIO.bits.in.bits, 3))
+      ("A18", IOPin(harnessIO.bits.in.valid)),
     )
     packagePinsWithPackageIOs foreach { case (pin, io) => {
       artyTh.xdc.addPackagePin(io, pin)
@@ -87,26 +81,25 @@ class WithArty100TSerialTLToGPIO extends HarnessBinder({
 class WithArty100TStacControllerToGPIO extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: StacControllerPort) => {
     val artyTh = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
-    val harnessIO = IO(port.io.cloneType).suggestName("stac_controller")
+    val harnessIO = IO(chiselTypeOf(port.io)).suggestName("stac_controller")
     harnessIO <> port.io
     val packagePinsWithPackageIOs = Seq(
-      ("J18", IOPin(harnessIO.sramExtEn)),
-      ("K15", IOPin(harnessIO.sramScanMode)),
-      ("J15", IOPin(harnessIO.sramScanIn)),
-      ("U12", IOPin(harnessIO.sramScanEn)),
-      ("V12", IOPin(harnessIO.sramBistEn)),
-      ("V10", IOPin(harnessIO.sramBistStart)),
-      ("V11", IOPin(harnessIO.clkSel)),
-      ("U14", IOPin(harnessIO.pllSel)),
-      ("V14", IOPin(harnessIO.pllScanEn)),
+      ("U12", IOPin(harnessIO.sramScanMode)),
+      ("V12", IOPin(harnessIO.pllArstb)),
+      ("V10", IOPin(harnessIO.pllScanClk)),
+      ("V11", IOPin(harnessIO.pllScanEn)),
+      ("U14", IOPin(harnessIO.pllScanIn)),
+      ("V14", IOPin(harnessIO.pllScanOut)),
       ("T13", IOPin(harnessIO.pllScanRst)),
-      ("U13", IOPin(harnessIO.pllScanClk)),
-      ("D4", IOPin(harnessIO.pllScanIn)),
-      ("D3", IOPin(harnessIO.pllArstb)),
-      ("F4", IOPin(harnessIO.customBoot)),
-      ("F3", IOPin(harnessIO.sramScanOut)),
-      ("E2", IOPin(harnessIO.sramBistDone)),
-      ("D2", IOPin(harnessIO.pllScanOut))
+      ("U13", IOPin(harnessIO.pllSel)),
+      ("D4", IOPin(harnessIO.sramBistStart)),
+      ("D3", IOPin(harnessIO.sramEn)),
+      ("F4", IOPin(harnessIO.sramBistEn)),
+      ("F3", IOPin(harnessIO.sramExtEn)),
+      ("E2", IOPin(harnessIO.sramScanIn)),
+      ("D2", IOPin(harnessIO.sramScanOut)),
+      ("H2", IOPin(harnessIO.sramScanEn)),
+      ("G2", IOPin(harnessIO.sramBistDone)),
     )
     packagePinsWithPackageIOs foreach { case (pin, io) => {
       artyTh.xdc.addPackagePin(io, pin)
