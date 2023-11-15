@@ -22,14 +22,12 @@ class StacControllerTopIO extends Bundle {
   val sramScanEn = Output(Bool())
   val sramBistEn = Output(Bool())
   val sramBistStart = Output(Bool())
-  // val clkSel = Output(UInt(2.W))
   val pllSel = Output(Bool())
   val pllScanEn = Output(Bool())
   val pllScanRst = Output(Bool())
   val pllScanClk = Output(Bool())
   val pllScanIn = Output(Bool())
   val pllArstb = Output(Bool())
-  // val customBoot = Output(Bool())
   val sramScanOut = Input(Bool())
   val sramBistDone = Input(Bool())
   val pllScanOut = Input(Bool())
@@ -43,39 +41,41 @@ class StacControllerIO extends Bundle {
 class StacController()(implicit p: Parameters) extends Module {
   val io = IO(new StacControllerIO)
 
-  io.top.sramExtEn := true.B 
-  io.top.sramScanMode := false.B 
-  io.top.sramEn := true.B 
+  val sramExtEn = RegInit(false.B)
+  val sramScanMode = RegInit(false.B)
+  val sramEn = RegInit(false.B)
+  val sramBistEn = RegInit(false.B)
+  val sramBistStart = RegInit(false.B)
+  val pllSel = RegInit(false.B)
+  val pllScanRst = RegInit(false.B)
+  val pllArstb = RegInit(false.B)
+
+  Seq(
+    (sramExtEn, io.top.sramExtEn, io.mmio.sramExtEn),
+    (sramScanMode, io.top.sramScanMode, io.mmio.sramScanMode),
+    (sramEn, io.top.sramEn, io.mmio.sramEn),
+    (sramBistEn, io.top.sramBistEn, io.mmio.sramBistEn),
+    (sramBistStart, io.top.sramBistStart, io.mmio.sramBistStart),
+    (pllSel, io.top.pllSel, io.mmio.pllSel),
+    (pllScanRst, io.top.pllScanRst, io.mmio.pllScanRst),
+    (pllArstb, io.top.pllArstb, io.mmio.pllArstb),
+    ).foreach(case (reg, io_top, io_mmio) => {
+      when(io_mmio.en) {
+        reg := io_mmio.d
+      }
+      io_mmio.q := reg
+      io_top := reg
+    })
+
+
   io.top.sramScanIn := false.B 
   io.top.sramScanEn := true.B 
   io.top.sramBistEn := false.B 
-  io.top.sramBistStart := true.B 
-  // io.top.clkSel := false.B 
-  io.top.pllSel := true.B 
   io.top.pllScanEn := false.B 
-  io.top.pllScanRst := true.B 
   io.top.pllScanClk := false.B 
   io.top.pllScanIn := true.B 
-  io.top.pllArstb := false.B 
-  // io.top.customBoot := true.B 
-  io.mmio.sramExtEn.q := 1.U
-  io.mmio.sramScanMode.q := 1.U
-  io.mmio.sramEn.q := 1.U
-  io.mmio.sramScanIn.q := 1.U
-  io.mmio.sramScanEn.q := 1.U
-  io.mmio.sramBistEn.q := 1.U
-  io.mmio.sramBistStart.q := 1.U
-  io.mmio.clkSel.q := 1.U
-  io.mmio.pllSel.q := 1.U
-  io.mmio.pllScanEn.q := 1.U
-  io.mmio.pllScanRst.q := 1.U
-  io.mmio.pllScanClk.q := 1.U
-  io.mmio.pllScanIn.q := 1.U
-  io.mmio.pllArstb.q := 1.U
-  io.mmio.customBoot.q := 1.U
-  io.mmio.sramScanOut.q := 1.U
+
   io.mmio.sramBistDone.q := 1.U
-  io.mmio.pllScanOut.q := 1.U
 }
 
 abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerParams)(
@@ -107,50 +107,23 @@ abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerPa
       REGMAP_OFFSET(SRAM_EN) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_EN), stacController.io.mmio.sramEn)
       ),
-      REGMAP_OFFSET(SRAM_SCAN_IN) -> Seq(
-        RegField.rwReg(REG_WIDTH(SRAM_SCAN_IN), stacController.io.mmio.sramScanIn)
-      ),
-      REGMAP_OFFSET(SRAM_SCAN_EN) -> Seq(
-        RegField.rwReg(REG_WIDTH(SRAM_SCAN_EN), stacController.io.mmio.sramScanEn)
-      ),
       REGMAP_OFFSET(SRAM_BIST_EN) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_BIST_EN), stacController.io.mmio.sramBistEn)
       ),
       REGMAP_OFFSET(SRAM_BIST_START) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_BIST_START), stacController.io.mmio.sramBistStart)
       ),
-      REGMAP_OFFSET(CLK_SEL) -> Seq(
-        RegField.rwReg(REG_WIDTH(CLK_SEL), stacController.io.mmio.clkSel)
-      ),
       REGMAP_OFFSET(PLL_SEL) -> Seq(
         RegField.rwReg(REG_WIDTH(PLL_SEL), stacController.io.mmio.pllSel)
-      ),
-      REGMAP_OFFSET(PLL_SCAN_EN) -> Seq(
-        RegField.rwReg(REG_WIDTH(PLL_SCAN_EN), stacController.io.mmio.pllScanEn)
       ),
       REGMAP_OFFSET(PLL_SCAN_RST) -> Seq(
         RegField.rwReg(REG_WIDTH(PLL_SCAN_RST), stacController.io.mmio.pllScanRst)
       ),
-      REGMAP_OFFSET(PLL_SCAN_CLK) -> Seq(
-        RegField.rwReg(REG_WIDTH(PLL_SCAN_CLK), stacController.io.mmio.pllScanClk)
-      ),
-      REGMAP_OFFSET(PLL_SCAN_IN) -> Seq(
-        RegField.rwReg(REG_WIDTH(PLL_SCAN_IN), stacController.io.mmio.pllScanIn)
-      ),
       REGMAP_OFFSET(PLL_ARSTB) -> Seq(
         RegField.rwReg(REG_WIDTH(PLL_ARSTB), stacController.io.mmio.pllArstb)
       ),
-      REGMAP_OFFSET(CUSTOM_BOOT) -> Seq(
-        RegField.rwReg(REG_WIDTH(CUSTOM_BOOT), stacController.io.mmio.customBoot)
-      ),
-      REGMAP_OFFSET(SRAM_SCAN_OUT) -> Seq(
-        RegField.rwReg(REG_WIDTH(SRAM_SCAN_OUT), stacController.io.mmio.sramScanOut)
-      ),
       REGMAP_OFFSET(SRAM_BIST_DONE) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_BIST_DONE), stacController.io.mmio.sramBistDone)
-      ),
-      REGMAP_OFFSET(PLL_SCAN_OUT) -> Seq(
-        RegField.rwReg(REG_WIDTH(PLL_SCAN_OUT), stacController.io.mmio.pllScanOut)
       ),
     )
   }
