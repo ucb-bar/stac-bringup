@@ -67,15 +67,12 @@ object StacControllerCtrlRegs extends Enumeration {
     SRAM_EXT_EN -> 1,
     SRAM_SCAN_MODE -> 1,
     SRAM_EN -> 1,
-    SRAM_SCAN_IN -> 1,
-    SRAM_SCAN_EN -> 1,
     SRAM_BIST_EN -> 1,
     SRAM_BIST_START -> 1,
-    SRAM_SCAN_OUT -> 1,
-    SRAM_BIST_DONE -> 1,
     PLL_SEL -> 1,
     PLL_SCAN_RST -> 1,
     PLL_ARSTB -> 1,
+    SRAM_BIST_DONE -> 1,
   )
   val TOTAL_REG_WIDTH = REG_WIDTH.values.sum
 
