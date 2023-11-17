@@ -59,13 +59,14 @@ class StacController()(implicit p: Parameters) extends Module {
     (pllSel, io.top.pllSel, io.mmio.pllSel),
     (pllScanRst, io.top.pllScanRst, io.mmio.pllScanRst),
     (pllArstb, io.top.pllArstb, io.mmio.pllArstb),
-    ).foreach(case (reg, io_top, io_mmio) => {
-      when(io_mmio.en) {
-        reg := io_mmio.d
+    ).foreach { case (reg, io_top, io_mmio) => {
+        when(io_mmio.en) {
+          reg := io_mmio.d
+        }
+        io_mmio.q := reg
+        io_top := reg
       }
-      io_mmio.q := reg
-      io_top := reg
-    })
+    }
 
 
   io.top.sramScanIn := false.B 

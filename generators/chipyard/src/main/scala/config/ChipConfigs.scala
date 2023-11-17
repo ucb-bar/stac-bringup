@@ -53,7 +53,6 @@ class STACBringupHostConfig extends Config(
   // Set up TestHarness for standalone-sim
   //=============================
   new chipyard.harness.WithAbsoluteFreqHarnessClockInstantiator ++  // Generate absolute frequencies
-  new chipyard.harness.WithSerialTLTiedOff ++                       // when doing standalone sim, tie off the serial-tl port
   new chipyard.harness.WithSimTSIToUARTTSI ++                       // Attach SimTSI-over-UART to the UART-TSI port
   new chipyard.iobinders.WithSerialTLPunchthrough ++                // Don't generate IOCells for the serial TL (this design maps to FPGA)
   new chipyard.iobinders.WithStacControllerPunchthrough ++                // Don't generate IOCells for the STAC controller (this design maps to FPGA)
