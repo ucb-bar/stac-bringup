@@ -26,7 +26,6 @@ class WithArty100TTweaks(freqMHz: Double = 50) extends Config(
   new WithArty100TDDRTL ++
   new WithNoDesignKey ++
   new testchipip.WithUARTTSIClient ++
-  new chipyard.harness.WithSerialTLTiedOff ++
   new chipyard.harness.WithHarnessBinderClockFreqMHz(freqMHz) ++
   new chipyard.config.WithMemoryBusFrequency(freqMHz) ++
   new chipyard.config.WithFrontBusFrequency(freqMHz) ++
