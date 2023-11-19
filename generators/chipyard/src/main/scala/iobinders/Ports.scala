@@ -15,6 +15,8 @@ import freechips.rocketchip.devices.debug.{ClockedDMIIO}
 import freechips.rocketchip.util.{HeterogeneousBag}
 import freechips.rocketchip.tilelink.{TLBundle}
 
+import staccontroller.{StacControllerTopIO}
+
 trait Port[T <: Data] {
   val getIO: () => T
   // port.io should only be called in the TestHarness context
@@ -70,6 +72,9 @@ case class JTAGPort        (val getIO: () => JTAGChipIO)
 
 case class SerialTLPort    (val getIO: () => ClockedIO[SerialIO], val params: SerialTLParams, val serdesser: TLSerdesser, val portId: Int)
     extends Port[ClockedIO[SerialIO]]
+
+case class StacControllerPort    (val getIO: () => StacControllerTopIO)
+    extends Port[StacControllerTopIO]
 
 case class UARTTSIPort     (val getIO: () => UARTTSIIO)
     extends Port[UARTTSIIO]

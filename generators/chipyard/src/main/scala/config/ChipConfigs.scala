@@ -48,6 +48,47 @@ class FlatChipTopChipLikeRocketConfig extends Config(
   new chipyard.ChipLikeRocketConfig)
 
 // A simple config demonstrating a "bringup prototype" to bringup the ChipLikeRocketconfig
+class STACBringupHostConfig extends Config(
+  //=============================
+  // Set up TestHarness for standalone-sim
+  //=============================
+  new chipyard.harness.WithAbsoluteFreqHarnessClockInstantiator ++  // Generate absolute frequencies
+  new chipyard.harness.WithSimTSIToUARTTSI ++                       // Attach SimTSI-over-UART to the UART-TSI port
+  new chipyard.iobinders.WithSerialTLPunchthrough ++                // Don't generate IOCells for the serial TL (this design maps to FPGA)
+  new chipyard.iobinders.WithStacControllerPunchthrough ++                // Don't generate IOCells for the STAC controller (this design maps to FPGA)
+  new staccontroller.WithStacControllerLocation(SBUS) ++ // See clocking
+  new staccontroller.WithStacControllerCrossingType(SynchronousCrossing()) ++
+  new staccontroller.WithStacController(staccontroller.StacControllerParams()) ++ // add STAC Controller peripheral
+
+  //=============================
+  // Setup the SerialTL side on the bringup device
+  //=============================
+  new testchipip.WithSerialTLWidth(1) ++                                       // match width with the chip
+  new testchipip.WithSerialTLMem(base = 0x0, size = 0x80000000L,               // accessible memory of the chip that doesn't come from the tethered host
+                                 idBits = 4, isMainMemory = false) ++          // This assumes off-chip mem starts at 0x8000_0000
+  new testchipip.WithSerialTLClockDirection ++ // bringup board drives the clock for the serial-tl receiver on the chip, use 75MHz clock
+
+  //============================
+  // Setup bus topology on the bringup system
+  //============================
+  new testchipip.WithOffchipBusClient(SBUS,                                    // offchip bus hangs off the SBUS
+    blockRange = AddressSet.misaligned(0x80000000L, (BigInt(1) << 30) * 4)) ++ // offchip bus should not see the main memory of the testchip, since that can be accessed directly
+  new testchipip.WithOffchipBus ++                                             // offchip bus
+
+  //=============================
+  // Set up memory on the bringup system
+  //=============================
+  new freechips.rocketchip.subsystem.WithExtMemSize((1 << 30) * 4L) ++         // match what the chip believes the max size should be
+
+  //=============================
+  // Generate the TSI-over-UART side of the bringup system
+  //=============================
+  new testchipip.WithUARTTSIClient() ++           // nonstandard baud rate to improve performance
+
+  // Base is the no-cores config
+  new chipyard.NoCoresConfig)
+
+// A simple config demonstrating a "bringup prototype" to bringup the ChipLikeRocketconfig
 class ChipBringupHostConfig extends Config(
   //=============================
   // Set up TestHarness for standalone-sim
