@@ -4,9 +4,9 @@ import struct
 fp_out = open("/dev/tty.usbserial-00004014B", "rb")
 fp_in = open("/dev/tty.usbserial-00004014B", "wb")
 
-def log(*args, **kwargs):
+def log(*pargs, **kwargs):
     if not args.quiet:
-        print(*args, **kwargs)
+        print(*pargs, **kwargs)
 
 def hexdump(bytes_input, width=16):
     current = 0
