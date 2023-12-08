@@ -32,6 +32,12 @@ pub enum AddrSeq {
 pub enum SramOp {
     Read,
     Write { data: SramInput, mask: SramInput },
+    Rand { mask: RandMask },
+}
+
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
+pub enum RandMask {
+    Fixed(SramWord),
     Rand,
 }
 
@@ -78,6 +84,87 @@ impl Pattern {
                             mask: SramInput::Fixed(u64::MAX),
                         },
                     ],
+                },
+            ],
+        }
+    }
+
+    pub fn march_cm() -> Self {
+        Self {
+            elements: vec![
+                Element {
+                    addr_seq: AddrSeq::Up,
+                    ops: vec![SramOp::Write {
+                        data: SramInput::Fixed(0),
+                        mask: SramInput::Fixed(u64::MAX),
+                    }],
+                },
+                Element {
+                    addr_seq: AddrSeq::Up,
+                    ops: vec![
+                        SramOp::Read,
+                        SramOp::Write {
+                            data: SramInput::Fixed(u64::MAX),
+                            mask: SramInput::Fixed(u64::MAX),
+                        },
+                    ],
+                },
+                Element {
+                    addr_seq: AddrSeq::Up,
+                    ops: vec![
+                        SramOp::Read,
+                        SramOp::Write {
+                            data: SramInput::Fixed(0),
+                            mask: SramInput::Fixed(u64::MAX),
+                        },
+                    ],
+                },
+                Element {
+                    addr_seq: AddrSeq::Down,
+                    ops: vec![
+                        SramOp::Read,
+                        SramOp::Write {
+                            data: SramInput::Fixed(u64::MAX),
+                            mask: SramInput::Fixed(u64::MAX),
+                        },
+                    ],
+                },
+                Element {
+                    addr_seq: AddrSeq::Down,
+                    ops: vec![
+                        SramOp::Read,
+                        SramOp::Write {
+                            data: SramInput::Fixed(0),
+                            mask: SramInput::Fixed(u64::MAX),
+                        },
+                    ],
+                },
+                Element {
+                    addr_seq: AddrSeq::Up,
+                    ops: vec![SramOp::Read],
+                },
+            ],
+        }
+    }
+
+    pub fn rand(n: u64) -> Self {
+        Self {
+            elements: vec![
+                Element {
+                    addr_seq: AddrSeq::Up,
+                    ops: vec![
+                        SramOp::Write {
+                            data: SramInput::Fixed(0),
+                            mask: SramInput::Fixed(u64::MAX),
+                        },
+                        SramOp::Read,
+                    ],
+                },
+                Element {
+                    addr_seq: AddrSeq::Rand(n),
+                    ops: vec![SramOp::Rand {
+                        mask: RandMask::Fixed(u64::MAX),
+                    }],
                 },
             ],
         }
@@ -176,7 +263,7 @@ impl FixedPattern {
                                 SramInput::Rand => rng.next_u64() & mask_mask,
                             },
                         },
-                        SramOp::Rand => {
+                        SramOp::Rand { mask } => {
                             if rng.next_u32() & 1 > 0 {
                                 FixedSramOp::Read {
                                     addr,
@@ -185,10 +272,15 @@ impl FixedPattern {
                                     ),
                                 }
                             } else {
+                                let mask = match mask {
+                                    RandMask::Fixed(mask) => *mask & mask_mask,
+                                    RandMask::Rand => rng.next_u64() & mask_mask,
+                                };
+
                                 FixedSramOp::Write {
                                     addr,
                                     data: rng.next_u64() & dmask,
-                                    mask: rng.next_u64() & mask_mask,
+                                    mask,
                                 }
                             }
                         }
