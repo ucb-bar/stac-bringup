@@ -11,6 +11,7 @@ fn bebe_write(addr: u64, data: u64, len: u64) {
             "python3",
             "bebe_host.py",
             "--no_wait",
+            "--quiet",
             "--addr",
             &addr,
             "--wdata",
@@ -33,6 +34,7 @@ fn bebe_read(addr: u64, len: u64) -> u64 {
             "python3",
             "bebe_host.py",
             "--no_wait",
+            "--quiet",
             "--addr",
             &addr,
             "--rlen",
@@ -49,6 +51,8 @@ fn bebe_read(addr: u64, len: u64) -> u64 {
 pub struct BebeExecutor {
     sram_id: u64,
 }
+
+pub struct BebeScratchpadExecutor;
 
 impl BebeExecutor {
     pub fn new(sram_id: u64) -> Self {
@@ -79,6 +83,22 @@ impl Executor for BebeExecutor {
         bebe_write(0x1028, 0, 8);
         bebe_write(0x1038, 0, 8);
         bebe_write(0x1180, u64::MAX, 8);
+    }
+
+    fn finish(&mut self) {}
+}
+
+const SCRATCHPAD_BASE_ADDR: u64 = 0x8000000;
+
+impl Executor for BebeScratchpadExecutor {
+    fn init(&mut self) {}
+    fn read(&mut self, addr: SramAddr) -> SramWord {
+        bebe_read(SCRATCHPAD_BASE_ADDR + addr as u64 * 8, 8)
+    }
+
+    fn write(&mut self, addr: SramAddr, data: SramWord, mask: SramWord) {
+        assert_eq!(mask, 0xFFFFFFFF, "scratchpad only supports mask of all 1s");
+        bebe_write(SCRATCHPAD_BASE_ADDR + addr as u64 * 8, data, 8);
     }
 
     fn finish(&mut self) {}
