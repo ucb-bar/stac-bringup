@@ -97,7 +97,7 @@ impl Executor for BebeScratchpadExecutor {
     }
 
     fn write(&mut self, addr: SramAddr, data: SramWord, mask: SramWord) {
-        assert_eq!(mask, 0xFFFFFFFF, "scratchpad only supports mask of all 1s");
+        assert_eq!(mask, 0xF, "scratchpad only supports mask of all 1s");
         bebe_write(SCRATCHPAD_BASE_ADDR + addr as u64 * 8, data, 8);
     }
 
