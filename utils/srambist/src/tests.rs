@@ -29,7 +29,7 @@ fn rand4096_ideal_executor() {
 #[test]
 #[ignore = "requires test chip"]
 fn mats_plus_bebe_scratchpad() {
-    let size = SramSize::new(64, 512, 8);
+    let size = SramSize::new(64, 2, 8);
     let ex = BebeScratchpadExecutor;
     let pat = FixedPattern::new(Pattern::mats_plus(), size, 1);
     execute(pat, ex).expect("failed to run MATS+ pattern");

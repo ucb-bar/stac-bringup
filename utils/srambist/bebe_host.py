@@ -1,8 +1,8 @@
 import argparse
 import struct
 
-fp_out = open("/dev/tty.usbserial-00004014B", "rb")
-fp_in = open("/dev/tty.usbserial-00004014B", "wb")
+fp_out = open("/dev/ttyUSB1", "rb")
+fp_in = open("/dev/ttyUSB1", "wb")
 
 def log(*pargs, **kwargs):
     if not args.quiet:
@@ -144,7 +144,7 @@ if (args.rlen):
     log(f"[bebe host] read result:")
     data = rx(read_len)
     if args.quiet:
-        print(data)
+        print(int.from_bytes(data, "big"))
     else:
         print(hexdump(data))
 
