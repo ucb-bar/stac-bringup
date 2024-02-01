@@ -69,8 +69,8 @@ class StacController()(implicit p: Parameters) extends Module {
     }
 
 
-  io.top.sramScanIn := false.B 
-  io.top.sramScanEn := true.B 
+  io.top.sramScanIn := true.B 
+  io.top.sramScanEn := false.B 
   io.top.sramBistEn := false.B 
   io.top.pllScanEn := false.B 
   io.top.pllScanClk := false.B 
