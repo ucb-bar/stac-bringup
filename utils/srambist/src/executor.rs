@@ -66,7 +66,7 @@ fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), T
                 print!("Reading {addr:#x}...\t");
                 let dout = ex.read(addr);
                 if dout == data {
-                    println!("OK");
+                    println!("OK (received {dout:#x})");
                 } else {
                     println!("ERROR: got {dout:#x}, expected {data:#x}");
                     errors.push(BistError {
@@ -87,8 +87,6 @@ fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), T
     if errors.is_empty() {
         Ok(())
     } else {
-        Err(TestPatternErrors {
-            errors,
-        })
+        Err(TestPatternErrors { errors })
     }
 }
