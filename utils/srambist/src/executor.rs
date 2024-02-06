@@ -48,19 +48,40 @@ pub struct BistError {
     expected: SramWord,
     received: SramWord,
 }
+
+/// Executes a test sequence.
 pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), TestPatternErrors> {
     println!("Beginning SRAM BIST test");
 
     ex.init();
-    let res = execute_inner(pattern, &mut ex);
+    let res = execute_inner(pattern, &mut ex, 0);
     ex.finish();
 
     res
 }
 
-fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), TestPatternErrors> {
+/// Executes a test sequence, skipping the first `offset` operations.
+pub fn execute_starting_at<E: Executor>(
+    pattern: FixedPattern,
+    mut ex: E,
+    offset: usize,
+) -> Result<(), TestPatternErrors> {
+    println!("Beginning SRAM BIST test starting at operation {offset}");
+
+    ex.init();
+    let res = execute_inner(pattern, &mut ex, offset);
+    ex.finish();
+
+    res
+}
+
+fn execute_inner<E: Executor>(
+    pattern: FixedPattern,
+    ex: &mut E,
+    ofs: usize,
+) -> Result<(), TestPatternErrors> {
     let mut errors = Vec::new();
-    for (i, op) in pattern.ops().enumerate() {
+    for (i, op) in pattern.ops().enumerate().skip(ofs) {
         match op {
             FixedSramOp::Read { data, addr } => {
                 print!("Reading {addr:#x}...\t");
