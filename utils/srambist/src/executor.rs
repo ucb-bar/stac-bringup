@@ -36,13 +36,19 @@ impl Executor for IdealExecutor {
     fn finish(&mut self) {}
 }
 
+/// A collection of all errors produced by executing a test.
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+pub struct TestPatternErrors {
+    pub errors: Vec<BistError>,
+}
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct BistError {
     op: usize,
     expected: SramWord,
     received: SramWord,
 }
-pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), BistError> {
+pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), TestPatternErrors> {
     println!("Beginning SRAM BIST test");
 
     ex.init();
@@ -52,7 +58,8 @@ pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), Bist
     res
 }
 
-fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), BistError> {
+fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), TestPatternErrors> {
+    let mut errors = Vec::new();
     for (i, op) in pattern.ops().enumerate() {
         match op {
             FixedSramOp::Read { data, addr } => {
@@ -62,7 +69,7 @@ fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), B
                     println!("OK");
                 } else {
                     println!("ERROR: got {dout:#x}, expected {data:#x}");
-                    return Err(BistError {
+                    errors.push(BistError {
                         op: i,
                         expected: data,
                         received: dout,
@@ -77,5 +84,11 @@ fn execute_inner<E: Executor>(pattern: FixedPattern, ex: &mut E) -> Result<(), B
         }
     }
 
-    Ok(())
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(TestPatternErrors {
+            errors,
+        })
+    }
 }
