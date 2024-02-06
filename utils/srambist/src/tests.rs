@@ -41,3 +41,21 @@ fn mats_plus_bebe_scratchpad() {
     let pat = FixedPattern::new(Pattern::mats_plus(), size, 1);
     execute(pat, ex).expect("failed to run MATS+ pattern");
 }
+
+#[test]
+#[ignore = "requires test chip"]
+fn march_cm_bebe_scratchpad() {
+    let size = STAC_SCRATCHPAD_SIZE;
+    let ex = BebeScratchpadExecutor;
+    let pat = FixedPattern::new(Pattern::march_cm(), size, 1);
+    execute(pat, ex).expect("failed to run March C- pattern");
+}
+
+#[test]
+#[ignore = "requires test chip"]
+fn rand_bebe_scratchpad() {
+    let size = STAC_SCRATCHPAD_SIZE;
+    let ex = BebeScratchpadExecutor;
+    let pat = FixedPattern::new(Pattern::rand(size.depth as u64 * 8), size, 151);
+    execute(pat, ex).expect("failed to run random pattern");
+}
