@@ -43,8 +43,8 @@ fn bebe_read(addr: u64, len: u64) -> u64 {
         .output()
         .expect("failed to run bebe");
     let output = String::from_utf8(output.stdout).expect("failed to parse bebe output");
-    println!("{:?}", output);
-    output.trim()
+    output
+        .trim()
         .parse()
         .expect("failed to convert bebe output to u64")
 }

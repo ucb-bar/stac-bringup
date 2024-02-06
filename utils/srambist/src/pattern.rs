@@ -49,9 +49,9 @@ pub enum SramInput {
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
 pub struct SramSize {
-    width: SramWord,
-    depth: SramAddr,
-    mask_width: SramWord,
+    pub(crate) width: SramWord,
+    pub(crate) depth: SramAddr,
+    pub(crate) mask_width: SramWord,
 }
 
 impl Pattern {
