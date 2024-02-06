@@ -37,6 +37,7 @@ impl Executor for IdealExecutor {
 }
 
 /// A collection of all errors produced by executing a test.
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct TestPatternErrors {
     pub errors: Vec<BistError>,
 }
@@ -47,7 +48,7 @@ pub struct BistError {
     expected: SramWord,
     received: SramWord,
 }
-pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), BistError> {
+pub fn execute<E: Executor>(pattern: FixedPattern, mut ex: E) -> Result<(), TestPatternErrors> {
     println!("Beginning SRAM BIST test");
 
     ex.init();
