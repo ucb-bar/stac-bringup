@@ -163,7 +163,7 @@ impl Pattern {
                 Element {
                     addr_seq: AddrSeq::Rand(n),
                     ops: vec![SramOp::Rand {
-                        mask: RandMask::Fixed(u64::MAX),
+                        mask: RandMask::Rand,
                     }],
                 },
             ],
