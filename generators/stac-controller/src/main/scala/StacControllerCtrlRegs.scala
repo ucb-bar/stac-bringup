@@ -61,7 +61,7 @@ object SramBistCtrlRegs extends Enumeration {
 object StacControllerCtrlRegs extends Enumeration {
   type Type = Value
   val SRAM_EXT_EN, SRAM_SCAN_MODE, SRAM_EN, SRAM_BIST_EN, 
-      SRAM_BIST_START, SRAM_BIST_DONE, PLL_SEL, PLL_SCAN_RST, PLL_ARSTB, HALF_CLOCK_DIV_RATIO = Value
+      SRAM_BIST_START, SRAM_BIST_DONE, PLL_SEL, PLL_SCAN_RSTN, PLL_ARSTB, HALF_CLOCK_DIV_RATIO = Value
 
   val REG_WIDTH = LinkedHashMap(
     SRAM_EXT_EN -> 1,
@@ -70,7 +70,7 @@ object StacControllerCtrlRegs extends Enumeration {
     SRAM_BIST_EN -> 1,
     SRAM_BIST_START -> 1,
     PLL_SEL -> 1,
-    PLL_SCAN_RST -> 1,
+    PLL_SCAN_RSTN -> 1,
     PLL_ARSTB -> 1,
     SRAM_BIST_DONE -> 1,
     HALF_CLOCK_DIV_RATIO -> 32,
@@ -95,7 +95,7 @@ class StacControllerMmioRegIO extends Bundle {
   val sramBistEn = new SimpleRegIO(REG_WIDTH(SRAM_BIST_EN))
   val sramBistStart = new SimpleRegIO(REG_WIDTH(SRAM_BIST_START))
   val pllSel = new SimpleRegIO(REG_WIDTH(PLL_SEL))
-  val pllScanRst = new SimpleRegIO(REG_WIDTH(PLL_SCAN_RST))
+  val pllScanRstn = new SimpleRegIO(REG_WIDTH(PLL_SCAN_RSTN))
   val pllArstb = new SimpleRegIO(REG_WIDTH(PLL_ARSTB))
   val sramBistDone = new SimpleRegIO(REG_WIDTH(SRAM_BIST_DONE))
   val halfClockDivRatio = new SimpleRegIO(REG_WIDTH(HALF_CLOCK_DIV_RATIO))

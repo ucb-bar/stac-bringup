@@ -24,7 +24,7 @@ class StacControllerTopIO extends Bundle {
   val sramBistStart = Output(Bool())
   val pllSel = Output(Bool())
   val pllScanEn = Output(Bool())
-  val pllScanRst = Output(Bool())
+  val pllScanRstn = Output(Bool())
   val pllScanClk = Output(Bool())
   val pllScanIn = Output(Bool())
   val pllArstb = Output(Bool())
@@ -49,7 +49,7 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
   val sramBistEn = RegInit(false.B)
   val sramBistStart = RegInit(false.B)
   val pllSel = RegInit(false.B)
-  val pllScanRst = RegInit(false.B)
+  val pllScanRstn = RegInit(false.B)
   val pllArstb = RegInit(false.B)
   val halfClockDivRatio = RegInit(params.halfClockDivRatio.U(32.W))
   val divClock = RegInit(false.B)
@@ -62,7 +62,7 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
     (sramBistEn, io.top.sramBistEn, io.mmio.sramBistEn),
     (sramBistStart, io.top.sramBistStart, io.mmio.sramBistStart),
     (pllSel, io.top.pllSel, io.mmio.pllSel),
-    (pllScanRst, io.top.pllScanRst, io.mmio.pllScanRst),
+    (pllScanRstn, io.top.pllScanRstn, io.mmio.pllScanRstn),
     (pllArstb, io.top.pllArstb, io.mmio.pllArstb),
     ).foreach { case (reg, io_top, io_mmio) => {
         when(io_mmio.en) {
@@ -136,8 +136,8 @@ abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerPa
       REGMAP_OFFSET(PLL_SEL) -> Seq(
         RegField.rwReg(REG_WIDTH(PLL_SEL), stacController.io.mmio.pllSel)
       ),
-      REGMAP_OFFSET(PLL_SCAN_RST) -> Seq(
-        RegField.rwReg(REG_WIDTH(PLL_SCAN_RST), stacController.io.mmio.pllScanRst)
+      REGMAP_OFFSET(PLL_SCAN_RSTN) -> Seq(
+        RegField.rwReg(REG_WIDTH(PLL_SCAN_RSTN), stacController.io.mmio.pllScanRstn)
       ),
       REGMAP_OFFSET(PLL_ARSTB) -> Seq(
         RegField.rwReg(REG_WIDTH(PLL_ARSTB), stacController.io.mmio.pllArstb)
