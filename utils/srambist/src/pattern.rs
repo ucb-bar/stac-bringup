@@ -49,9 +49,9 @@ pub enum SramInput {
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
 pub struct SramSize {
-    width: SramWord,
-    depth: SramAddr,
-    mask_width: SramWord,
+    pub(crate) width: SramWord,
+    pub(crate) depth: SramAddr,
+    pub(crate) mask_width: SramWord,
 }
 
 impl Pattern {
@@ -163,7 +163,7 @@ impl Pattern {
                 Element {
                     addr_seq: AddrSeq::Rand(n),
                     ops: vec![SramOp::Rand {
-                        mask: RandMask::Fixed(u64::MAX),
+                        mask: RandMask::Rand,
                     }],
                 },
             ],
