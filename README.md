@@ -1,3 +1,29 @@
+# STAC Bringup
+
+## Log
+
+### 2/6/24
+
+- Ran `bebe_host.py` SRAM BIST with MATS+ pattern on two STAC boards
+  ```
+  WRITE 0x0
+  READ 0x0 + WRITE 0xffffffffffffffff
+  READ 0xffffffffffffffff + WRITE 0x0
+  ```
+- Boards 1 and 2 had identical failures:
+  ```
+  ERROR reading 0x1ef: got 0x5200000000000000, expected 0x0
+  ERROR reading 0x1f0: got 0x8000000000000000, expected 0x0
+  ERROR reading 0x1f1: got 0x9002010000000000, expected 0x0
+  ERROR reading 0x1f1: got 0x9002010000000000, expected 0xffffffffffffffff
+  ERROR reading 0x1f0: got 0x8000000000000000, expected 0xffffffffffffffff
+  ERROR reading 0x1ef: got 0x5200000000000000, expected 0xffffffffffffffff
+  ```
+- Hypotheses:
+  - Distance to nearest row/n-well tap
+  - Too far away from write circuitry
+  - Decoder one-hot is incorrect
+
 ![CHIPYARD](https://github.com/ucb-bar/chipyard/raw/main/docs/_static/images/chipyard-logo-full.png)
 
 # Chipyard Framework [![Test](https://github.com/ucb-bar/chipyard/actions/workflows/chipyard-run-tests.yml/badge.svg)](https://github.com/ucb-bar/chipyard/actions)
