@@ -145,6 +145,9 @@ abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerPa
       REGMAP_OFFSET(SRAM_BIST_DONE) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_BIST_DONE), stacController.io.mmio.sramBistDone)
       ),
+      REGMAP_OFFSET(HALF_CLOCK_DIV_RATIO) -> Seq(
+        RegField.rwReg(REG_WIDTH(HALF_CLOCK_DIV_RATIO), stacController.io.mmio.halfClockDivRatio)
+      ),
     )
   }
 }
