@@ -95,7 +95,7 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
     cycles := cycles + 1.U
   }
 
-  io.mmio.sramBistDone.q := io.sramBistDone
+  io.mmio.sramBistDone.q := io.top.sramBistDone
 }
 
 abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerParams)(
