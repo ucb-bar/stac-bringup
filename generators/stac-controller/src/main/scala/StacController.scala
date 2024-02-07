@@ -31,6 +31,8 @@ class StacControllerTopIO extends Bundle {
   val sramScanOut = Input(Bool())
   val sramBistDone = Input(Bool())
   val pllScanOut = Input(Bool())
+  val reset = Output(Bool())
+  val clk = Output(Bool())
 }
 
 class StacControllerIO extends Bundle {
@@ -75,6 +77,9 @@ class StacController()(implicit p: Parameters) extends Module {
   io.top.pllScanEn := false.B 
   io.top.pllScanClk := false.B 
   io.top.pllScanIn := true.B 
+  io.top.reset := reset
+
+  io.top.clk := clock.asBool
 
   io.mmio.sramBistDone.q := 1.U
 }
