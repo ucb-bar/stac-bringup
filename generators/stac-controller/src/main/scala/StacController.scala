@@ -40,7 +40,7 @@ class StacControllerIO extends Bundle {
   val mmio = new StacControllerMmioRegIO
 }
 
-class StacController()(implicit p: Parameters) extends Module {
+class StacController(params: StacControllerParams)(implicit p: Parameters) extends Module {
   val io = IO(new StacControllerIO)
 
   val sramExtEn = RegInit(false.B)
@@ -51,6 +51,9 @@ class StacController()(implicit p: Parameters) extends Module {
   val pllSel = RegInit(false.B)
   val pllScanRst = RegInit(false.B)
   val pllArstb = RegInit(false.B)
+  val halfClockDivRatio = RegInit(params.halfClockDivRatio.U(32.W))
+  val divClock = RegInit(false.B)
+  val cycles = RegInit(0.U(32.W))
 
   Seq(
     (sramExtEn, io.top.sramExtEn, io.mmio.sramExtEn),
@@ -70,18 +73,29 @@ class StacController()(implicit p: Parameters) extends Module {
       }
     }
 
+    when (io.mmio.halfClockDivRatio.en) {
+      halfClockDivRatio := io.mmio.halfClockDivRatio.d
+    }
+    io.mmio.halfClockDivRatio.q := halfClockDivRatio
+
 
   io.top.sramScanIn := true.B 
   io.top.sramScanEn := false.B 
-  io.top.sramBistEn := false.B 
   io.top.pllScanEn := false.B 
   io.top.pllScanClk := false.B 
   io.top.pllScanIn := true.B 
   io.top.reset := reset
 
-  io.top.clk := clock.asBool
+  io.top.clk := divClock
 
-  io.mmio.sramBistDone.q := 1.U
+  when (halfClockDivRatio === 0.U || cycles >= halfClockDivRatio - 1.U) {
+    cycles := 0.U
+    divClock := ~divClock
+  } .otherwise {
+    cycles := cycles + 1.U
+  }
+
+  io.mmio.sramBistDone.q := io.sramBistDone
 }
 
 abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerParams)(
@@ -99,7 +113,7 @@ abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerPa
   lazy val module = new LazyModuleImp(this) {
     val io = ioNode.bundle
 
-    val stacController = Module(new StacController())
+    val stacController = Module(new StacController(params))
 
     io <> stacController.io.top
 
