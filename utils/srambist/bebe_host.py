@@ -1,8 +1,8 @@
 import argparse
 import struct
 
-fp_out = open("/dev/ttyUSB1", "rb")
-fp_in = open("/dev/ttyUSB1", "wb")
+fp_out = open("/dev/ttyUSB2", "rb")
+fp_in = open("/dev/ttyUSB2", "wb")
 
 def log(*pargs, **kwargs):
     if not args.quiet:
