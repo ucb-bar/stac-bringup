@@ -51,8 +51,9 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
   val pllSel = RegInit(false.B)
   val pllScanRstn = RegInit(false.B)
   val pllArstb = RegInit(false.B)
-  val halfClockDivRatio = RegInit(params.halfClockDivRatio.U(32.W))
-  val divClock = RegInit(false.B)
+  val halfClkDivRatio = RegInit(params.halfClkDivRatio.U(32.W))
+  val clkEn = RegInit(false.B)
+  val divClk = RegInit(false.B)
   val cycles = RegInit(0.U(32.W))
 
   Seq(
@@ -73,10 +74,16 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
       }
     }
 
-    when (io.mmio.halfClockDivRatio.en) {
-      halfClockDivRatio := io.mmio.halfClockDivRatio.d
+    Seq(
+      (clkEn, io.mmio.clkEn),
+      (halfClkDivRatio, io.mmio.halfClkDivRatio),
+      ).foreach { case (reg, io_mmio) => {
+        when (io_mmio.en) {
+          reg := io_mmio.d
+        }
+        io_mmio.q := reg
+      }
     }
-    io.mmio.halfClockDivRatio.q := halfClockDivRatio
 
 
   io.top.sramScanIn := true.B 
@@ -86,11 +93,15 @@ class StacController(params: StacControllerParams)(implicit p: Parameters) exten
   io.top.pllScanIn := true.B 
   io.top.reset := reset
 
-  io.top.clk := divClock
+  when (clkEn) {
+    io.top.clk := divClk
+  } .otherwise {
+    io.top.clk := false.B
+  }
 
-  when (halfClockDivRatio === 0.U || cycles >= halfClockDivRatio - 1.U) {
+  when (halfClkDivRatio === 0.U || cycles >= halfClkDivRatio - 1.U) {
     cycles := 0.U
-    divClock := ~divClock
+    divClk := ~divClk
   } .otherwise {
     cycles := cycles + 1.U
   }
@@ -145,8 +156,11 @@ abstract class StacControllerRouter(busWidthBytes: Int, params: StacControllerPa
       REGMAP_OFFSET(SRAM_BIST_DONE) -> Seq(
         RegField.rwReg(REG_WIDTH(SRAM_BIST_DONE), stacController.io.mmio.sramBistDone)
       ),
-      REGMAP_OFFSET(HALF_CLOCK_DIV_RATIO) -> Seq(
-        RegField.rwReg(REG_WIDTH(HALF_CLOCK_DIV_RATIO), stacController.io.mmio.halfClockDivRatio)
+      REGMAP_OFFSET(CLK_EN) -> Seq(
+        RegField.rwReg(REG_WIDTH(CLK_EN), stacController.io.mmio.clkEn)
+      ),
+      REGMAP_OFFSET(HALF_CLK_DIV_RATIO) -> Seq(
+        RegField.rwReg(REG_WIDTH(HALF_CLK_DIV_RATIO), stacController.io.mmio.halfClkDivRatio)
       ),
     )
   }
