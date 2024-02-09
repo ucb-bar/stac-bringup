@@ -6,7 +6,8 @@ import freechips.rocketchip.subsystem.{BaseSubsystem, TLBusWrapperLocation}
 import freechips.rocketchip.tilelink._
 
 case class StacControllerParams(
-    address: BigInt = BigInt("90000000", 16)
+    address: BigInt = BigInt("90000000", 16),
+    halfClkDivRatio: Int = 125
 )
 
 case object StacControllerKey extends Field[Option[StacControllerAttachParams]](None)
