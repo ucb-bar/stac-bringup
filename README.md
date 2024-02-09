@@ -24,6 +24,15 @@
   - Too far away from write circuitry
   - Decoder one-hot is incorrect
 
+### 2/8/24
+
+- Ran `bebe_host.py` SRAM BIST with random pattern on STAC board 2
+  ```
+  WRITE 0x0 to all addresses
+  RANDOM READ/WRITE
+  ```
+- Failures in several addresses, unclear if they are correlated
+
 ![CHIPYARD](https://github.com/ucb-bar/chipyard/raw/main/docs/_static/images/chipyard-logo-full.png)
 
 # Chipyard Framework [![Test](https://github.com/ucb-bar/chipyard/actions/workflows/chipyard-run-tests.yml/badge.svg)](https://github.com/ucb-bar/chipyard/actions)
