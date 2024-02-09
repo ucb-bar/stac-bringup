@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use std::time::Duration;
 
 use clap::{Parser, Subcommand};
 use clap_num::maybe_hex;
@@ -23,8 +24,8 @@ enum Command {
         #[clap(value_parser=maybe_hex::<u64>)]
         addr: u64,
         /// The desired read length in bytes. Is rounded up to the nearest multiple of 4.
-        #[clap(short='l', long, value_parser=maybe_hex::<u64>, default_value="4")]
-        len: u64,
+        #[clap(short='l', long, value_parser=maybe_hex::<usize>, default_value="4")]
+        len: usize,
     },
     /// Help message for write.
     Write {
@@ -38,8 +39,8 @@ enum Command {
         ///
         /// If provided, zero-pads the write data to the given length. If length is not a multiple
         /// of 4, data will be additionally zero-padded to a multiple of 4 bytes.
-        #[clap(short='l', long, value_parser=maybe_hex::<u64>)]
-        len: Option<u64>,
+        #[clap(short='l', long, value_parser=maybe_hex::<usize>)]
+        len: Option<usize>,
     },
 }
 
@@ -48,6 +49,7 @@ fn main() {
 
     println!("{} {}", args.tty, args.baud);
     let mut port = serialport::new(args.tty, args.baud)
+        .timeout(Duration::from_secs(3))
         .open()
         .expect("failed to open TTY");
 
@@ -55,9 +57,10 @@ fn main() {
         Command::Read { addr, len } => {
             println!("Reading from {addr:#X}...");
             write_req(&mut port, tsi::Command::Read, addr, &[]);
-            let mut serial_buf: Vec<u8> = vec![0; 32];
+            let mut serial_buf: Vec<u8> = vec![0; len];
             port.read(serial_buf.as_mut_slice())
                 .expect("Found no data!");
+            println!("Read 0x{}", hex::encode(&serial_buf));
         }
         Command::Write { addr, data, len } => {
             println!("Writing {data} to {addr:#X}...");
