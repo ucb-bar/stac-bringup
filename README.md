@@ -72,6 +72,32 @@ Need to write `1` to the register that enables the clock in order to turn on the
 After the clock is turned on, the STAC board's blue UART LED should start flashing. You should then be able to write to MMIO registers that control the SRAM control circuitry
 (test SRAMs, BIST, TDCs, delay lines, etc.) via UART TSI.
 
+The current `REGMAP_OFFSET` map:
+
+```
+val res0: Map[StacControllerCtrlRegs.Value, Int] = HashMap(
+  SRAM_EXT_EN -> 0, 
+  SRAM_SCAN_MODE -> 8, 
+  SRAM_EN -> 16, 
+  SRAM_BIST_EN -> 24, 
+  SRAM_BIST_START -> 32,
+  PLL_SEL -> 40, 
+  PLL_SCAN_RSTN -> 48, 
+  PLL_ARSTB -> 56, 
+  SRAM_BIST_DONE -> 64, 
+  CLK_EN -> 72, 
+  HALF_CLK_DIV_RATIO -> 80, 
+)
+```
+
+To avoid the UART reset issue, run the following to proxy the FPGA's TTY:
+
+```
+sudo socat -d -d /dev/ttyUSB1,raw,echo=0 pty,raw,echo=0
+```
+
+Then, point `uarttsi` to the pseudo-TTY instead of directly at the FPGA.
+
 ## Log
 
 ### 2/13/24
