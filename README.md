@@ -1,5 +1,77 @@
 # STAC Bringup
 
+## Infrastructure
+
+This repo contains source code for generating an Arty100T bitstream for bringup purposes, as well as additional utilities for
+running tests on STAC. 
+
+### Compiling bitstream on BWRC servers
+
+To get started, set up Chipyard by following the steps below.
+
+Install `conda` (say "yes" and press enter when prompted):
+
+```
+mkdir -m 0700 -p /tools/C/$USER
+cd /tools/C/$USER
+wget -O Miniforge3.sh \
+"https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3.sh -p "/tools/C/${USER}/conda"
+```
+
+Then, run Chipyard setup from the root directory of this repo:
+
+```
+source ~/.bashrc
+mamba install -n base conda-lock=1.4
+mamba activate base
+./build-setup.sh riscv-tools -s 6 -s 7 -s 8 -s 9 -s 10 --force
+./scripts/init-vlsi sky130
+```
+
+Add the following to the generated `env.sh` file:
+
+```
+export PATH=/tools/C/rohankumar/circt/build/bin
+```
+
+Source your environment:
+
+```
+source env.sh
+```
+
+Then, go into the `fpga/` folder and compile the bitstream. Make sure `/tools/xilinx/Vivado/current/bin` is on your `PATH`.
+
+```
+make bitstream SUB_PROJECT=arty100t CONFIG=BringupArty100TConfig
+```
+
+### Programming FPGA
+
+Copy the bitstream from BWRC onto the lab computer in the `stac-bringup/vivado` folder (currently on the `utils-reorg` branch, will be merged in at some point):
+
+```
+scp bwrc:/tools/C/rohankumar/stac-bringup/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.BringupArty100TConfig/obj/Arty100THarness.bit /home/rohankumar/stac-bringup/vivado
+```
+
+With the FPGA plugged in, run the following from the `stac-bringup/vivado` directory:
+
+```
+./program-arty.sh
+```
+
+If the FPGA is not found, open up the Vivado Lab GUI by running `vivado_lab` and try to find the device.
+
+
+### Using the FPGA
+
+Need to write `1` to the register that enables the clock in order to turn on the clock. Another register controls the clock division ratio relative to 50 MHz
+(i.e. a value of 125 corresponds to a frequency of 50/125/2 = 200 kHz).
+
+After the clock is turned on, the STAC board's blue UART LED should start flashing. You should then be able to write to MMIO registers that control the SRAM control circuitry
+(test SRAMs, BIST, TDCs, delay lines, etc.) via UART TSI.
+
 ## Log
 
 ### 2/13/24
