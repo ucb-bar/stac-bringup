@@ -12,6 +12,20 @@ TODOs:
 - Run rand test pattern on small test SRAMs
 - Write documentation on how to test UART TSI if needed
 
+### 2/12/24
+
+Ran more thorough PEX simulations on `sram22_512x64m4w8`.
+Found that in the `ff` corner, the `wl_en0` (unbuffered wordline enable)
+pulse is too short, causing read/write issues.
+The pulse length is controlled by an inverter chain. In the `ff` corner,
+the inverter chain is fast, and the pulse length becomes too short.
+We need better matching between the delay to drive the replica bitcells
+and the inverter chain that controls wordline pulse length.
+
+No issues were identified in the `tt` corner.
+The bitline swing in PEX simulation in the `tt` corner is approximately 0.55V.
+Sense amp enable timing could be a bit faster.
+
 ### 2/8/24
 
 - Ran `bebe_host.py` SRAM BIST with random pattern on STAC board 2
