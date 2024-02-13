@@ -2,6 +2,25 @@
 
 ## Log
 
+### 2/13/24
+
+TODOs:
+- Bring up TDC / delay line to the point where we can run basic sanity checks
+- Write documentation on how to test TDC / delay line
+  (e.g. increasing the delay line code results in an increasing TDC code).
+- Test the smaller test SRAMs
+- Run rand test pattern on small test SRAMs
+- Write documentation on how to test UART TSI if needed
+
+### 2/8/24
+
+- Ran `bebe_host.py` SRAM BIST with random pattern on STAC board 2
+  ```
+  WRITE 0x0 to all addresses
+  RANDOM READ/WRITE
+  ```
+- Failures in several addresses, unclear if they are correlated
+
 ### 2/6/24
 
 - Ran `bebe_host.py` SRAM BIST with MATS+ pattern on two STAC boards
@@ -23,15 +42,6 @@
   - Distance to nearest row/n-well tap
   - Too far away from write circuitry
   - Decoder one-hot is incorrect
-
-### 2/8/24
-
-- Ran `bebe_host.py` SRAM BIST with random pattern on STAC board 2
-  ```
-  WRITE 0x0 to all addresses
-  RANDOM READ/WRITE
-  ```
-- Failures in several addresses, unclear if they are correlated
 
 ![CHIPYARD](https://github.com/ucb-bar/chipyard/raw/main/docs/_static/images/chipyard-logo-full.png)
 
