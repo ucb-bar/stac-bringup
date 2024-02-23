@@ -29,12 +29,6 @@ mamba activate base
 ./scripts/init-vlsi sky130
 ```
 
-Add the following to the generated `env.sh` file:
-
-```
-export PATH=/tools/C/rohankumar/circt/build/bin:$PATH
-```
-
 Source your environment:
 
 ```
