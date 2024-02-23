@@ -32,7 +32,7 @@ mamba activate base
 Add the following to the generated `env.sh` file:
 
 ```
-export PATH=/tools/C/rohankumar/circt/build/bin
+export PATH=/tools/C/rohankumar/circt/build/bin:$PATH
 ```
 
 Source your environment:
