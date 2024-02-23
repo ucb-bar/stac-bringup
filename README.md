@@ -98,6 +98,28 @@ sudo socat -d -d /dev/ttyUSB1,raw,echo=0 pty,raw,echo=0
 
 Then, point `uarttsi` to the pseudo-TTY instead of directly at the FPGA.
 
+To create a pseudo-TTY for testing purposes, run the following:
+
+```
+sudo socat -d -d pty,raw,echo=0 pty,raw,echo=0
+```
+
+Then, use `utils/read_tty_raw.py` to listen on one of the created pseudo-TTYs by modifying the `fp_out`
+variable:
+
+```
+fp_out = open("/dev/ttys011", "rb")
+```
+
+Then, run the script using python:
+
+```
+python3 read_tty_raw.py
+```
+
+When you write to the other pseudo-TTY, the raw bytes should show up in the terminal where you ran the 
+Python scripts.
+
 ### Using STAC
 
 The current `REGMAP_OFFSET` map for STAC's MMIO registers:
