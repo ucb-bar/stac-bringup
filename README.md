@@ -52,7 +52,7 @@ make bitstream SUB_PROJECT=arty100t CONFIG=BringupArty100TConfig
 Copy the bitstream from BWRC onto the lab computer in the `stac-bringup/vivado` folder (currently on the `utils-reorg` branch, will be merged in at some point):
 
 ```
-scp bwrc:/tools/C/rohankumar/stac-bringup/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.BringupArty100TConfig/obj/Arty100THarness.bit /home/rohankumar/stac-bringup/vivado
+scp bwrc:/tools/C/rohankumar/stac-bringup/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.BringupArty100TConfig/obj/Arty100THarness.bit /home/rohan/stac-bringup/vivado
 ```
 
 With the FPGA plugged in, run the following from the `stac-bringup/vivado` directory:
@@ -132,6 +132,78 @@ Sense amp enable timing could be a bit faster.
   RANDOM READ/WRITE
   ```
 - Failures in several addresses, unclear if they are correlated
+  ```
+  Reading 0x1ef...        ERROR: got 0x5200000000000000, expected 0x0
+  Reading 0x1f0...        ERROR: got 0x800000000000000, expected 0x0
+  Reading 0x1f1...        ERROR: got 0x9002010000000000, expected 0x0
+  Reading 0x1f0...        ERROR: got 0x800000000000000, expected 0x0
+  Reading 0x1b9...        ERROR: got 0x2e13b3766ae17e9c, expected 0x9c7ee16a76b3132e
+  Reading 0xed... ERROR: got 0xca1ca1956c3d6f5f, expected 0x5f6f3d6c95a11cca
+  Reading 0x1f8...        ERROR: got 0x8abc8b9a635218fc, expected 0xfc1852639a8bbc8a
+  Reading 0x159...        ERROR: got 0xc3c2194e18dafd5e, expected 0x5efdda184e19c2c3
+  Reading 0x81... ERROR: got 0xda6077d766bf28de, expected 0xde28bf66d77760da
+  Reading 0x1f8...        ERROR: got 0x8abc8b9a635218fc, expected 0xfc1852639a8bbc8a
+  Reading 0xed... ERROR: got 0xca1ca1956c3d6f5f, expected 0x5f6f3d6c95a11cca
+  Reading 0x1d4...        ERROR: got 0x794e45c8640e9a05, expected 0x59a0e64c8454e79
+  Reading 0x96... ERROR: got 0x146438681b325f8e, expected 0x8e5f321b68386414
+  Reading 0x124...        ERROR: got 0x10c214eadf213b38, expected 0x383b21dfea14c210
+  Reading 0x1f8...        ERROR: got 0x8abc8b9a635218fc, expected 0xfc1852639a8bbc8a
+  Reading 0x77... ERROR: got 0x5fbc3c68237a9e18, expected 0x189e7a23683cbc5f
+  Reading 0x17... ERROR: got 0x8ca591f9ba29f24d, expected 0x4df229baf991a58c
+  Reading 0x19e...        ERROR: got 0xb0f9b2b72e592b2a, expected 0x2a2b592eb7b2f9b0
+  Reading 0x60... ERROR: got 0xabeb9aec3e99944f, expected 0x4f94993eec9aebab
+  Reading 0x1a9...        ERROR: got 0xf72faa10d2e3b6b0, expected 0xb0b6e3d210aa2ff7
+  Reading 0x68... ERROR: got 0x11aa8741529e238, expected 0x38e2291574a81a01
+  Reading 0xa...  ERROR: got 0xe730537c7b905963, expected 0x6359907b7c5330e7
+  Reading 0x199...        ERROR: got 0xceddb5224f6070f7, expected 0xf770604f22b5ddce
+  Reading 0x93... ERROR: got 0xd24e9a903c5b81c, expected 0x1cb8c503a9e9240d
+  Reading 0x18... ERROR: got 0x894c0248e509e843, expected 0x43e809e548024c89
+  Reading 0x157...        ERROR: got 0xf79d627d1e0190a6, expected 0xa690011e7d629df7
+  Reading 0x92... ERROR: got 0xc9270bf5b22cac0f, expected 0xfac2cb2f50b27c9
+  Reading 0x78... ERROR: got 0xb9a31c37df1e2112, expected 0x12211edf371ca3b9
+  Reading 0x44... ERROR: got 0x5ca4d445e1ab4b58, expected 0x584babe145d4a45c
+  Reading 0x9d... ERROR: got 0x4e026034ad026f65, expected 0x656f02ad3460024e
+  Reading 0x16... ERROR: got 0x29cb31b1bca6ac96, expected 0x96aca6bcb131cb29
+  Reading 0x141...        ERROR: got 0xa3d130ef3878dfc8, expected 0xc8df7838ef30d1a3
+  Reading 0xaa... ERROR: got 0x838fae6d35b09080, expected 0x8090b0356dae8f83
+  Reading 0x1e3...        ERROR: got 0x10dbf84e2d0ffa3f, expected 0x3ffa0f2d4ef8db10
+  Reading 0x1b5...        ERROR: got 0x708ae1bc0117ce58, expected 0x58ce1701bce18a70
+  Reading 0x1f1...        ERROR: got 0x9002010000000000, expected 0x0
+  Reading 0x1de...        ERROR: got 0xccca26ccfb4e2326, expected 0x26234efbcc26cacc
+  Reading 0xa4... ERROR: got 0x8228c74b7b46bb3f, expected 0x3fbb467b4bc72882
+  Reading 0xa5... ERROR: got 0xb5e636ba168a9e98, expected 0x989e8a16ba36e6b5
+  Reading 0x8f... ERROR: got 0x16dc6e8b771d0d6e, expected 0x6e0d1d778b6edc16
+  Reading 0xfd... ERROR: got 0x255773b9d7bc5ee0, expected 0xe05ebcd7b9735725
+  Reading 0x30... ERROR: got 0x6915943e575fd124, expected 0x24d15f573e941569
+  Reading 0x165...        ERROR: got 0x15e51a9bc2b382f4, expected 0xf482b3c29b1ae515
+  Reading 0x190...        ERROR: got 0x158967b7f94d6561, expected 0x61654df9b7678915
+  Reading 0x1e9...        ERROR: got 0x214aaf0bfa378c0, expected 0xc078a3bff0aa1402
+  Reading 0x9d... ERROR: got 0xbcd3d1e79b13d67b, expected 0x7bd6139be7d1d3bc
+  Reading 0x61... ERROR: got 0x725f8b1009089f4e, expected 0x4e9f0809108b5f72
+  Reading 0x37... ERROR: got 0xbed88912d037cada, expected 0xdaca37d01289d8be
+  Reading 0xc2... ERROR: got 0x23016b8b74f90bee, expected 0xee0bf9748b6b0123
+  Reading 0xe...  ERROR: got 0x600c5aa0116b9e05, expected 0x59e6b11a05a0c60
+  Reading 0x1d2...        ERROR: got 0xfd1e1209f138c107, expected 0x7c138f109121efd
+  Reading 0x172...        ERROR: got 0xb99a650c25fb212b, expected 0x2b21fb250c659ab9
+  Reading 0x147...        ERROR: got 0x4e8853f665ab1d91, expected 0x911dab65f653884e
+  Reading 0x134...        ERROR: got 0x409bb899de5d6ff3, expected 0xf36f5dde99b89b40
+  Reading 0x85... ERROR: got 0xee4fb4008abf694a, expected 0x4a69bf8a00b44fee
+  Reading 0x1d2...        ERROR: got 0xfd1e1209f138c107, expected 0x7c138f109121efd
+  Reading 0x1c8...        ERROR: got 0xcfdca1b3bdf4eff3, expected 0xf3eff4bdb3a1dccf
+  Reading 0x1c8...        ERROR: got 0xcfdca1b3bdf4eff3, expected 0xf3eff4bdb3a1dccf
+  Reading 0xe2... ERROR: got 0xed67203cdd43b946, expected 0x46b943dd3c2067ed
+  Reading 0x151...        ERROR: got 0xb511e7a9764f0229, expected 0x29024f76a9e711b5
+  Reading 0x11... ERROR: got 0x1889ec220ba892f3, expected 0xf392a80b22ec8918
+  Reading 0xe9... ERROR: got 0xa22a458a101197ae, expected 0xae9711108a452aa2
+  Reading 0x10d...        ERROR: got 0x6156a7be12dc530, expected 0x30c52de17b6a1506
+  Reading 0x184...        ERROR: got 0x807482b0e741fa50, expected 0x50fa41e7b0827480
+  Reading 0x171...        ERROR: got 0xa284b4f66272a7a8, expected 0xa8a77262f6b484a2
+  Reading 0xa0... ERROR: got 0x56d0deaeda4b9de2, expected 0xe29d4bdaaeded056
+  Reading 0x107...        ERROR: got 0x7aa7c76933b9b43a, expected 0x3ab4b93369c7a77a
+  Reading 0x4f... ERROR: got 0xeb77e909145273ce, expected 0xce73521409e977eb
+  Reading 0x83... ERROR: got 0x2a4db9695f080c96, expected 0x960c085f69b94d2a
+  Reading 0x7c... ERROR: got 0x34a4ada229568140, expected 0x40815629a2ada434
+  ```
 
 ### 2/6/24
 
