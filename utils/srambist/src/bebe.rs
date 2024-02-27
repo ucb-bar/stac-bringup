@@ -2,7 +2,7 @@ use crate::executor::Executor;
 use crate::pattern::{SramAddr, SramWord};
 use std::process::Command;
 
-fn bebe_write(addr: u64, data: u64, len: u64) {
+pub fn bebe_write(addr: u64, data: u64, len: u64) {
     let addr = format!("{addr:X}");
     let data = format!("{data:X}");
     let len = format!("{len}");
@@ -26,7 +26,7 @@ fn bebe_write(addr: u64, data: u64, len: u64) {
     }
 }
 
-fn bebe_read(addr: u64, len: u64) -> u64 {
+pub fn bebe_read(addr: u64, len: u64) -> u64 {
     let addr = format!("{addr:X}");
     let len = format!("{len}");
     let output = Command::new("sudo")
