@@ -1,6 +1,7 @@
 use crate::bebe::BebeScratchpadExecutor;
 use crate::executor::{execute, IdealExecutor};
 use crate::pattern::{FixedPattern, Pattern, SramSize};
+use crate::testsite::sweep_tdc_test;
 
 /// The size of the scratchpad on the STAC-V1 test chip.
 const STAC_SCRATCHPAD_SIZE: SramSize = SramSize {
@@ -58,4 +59,10 @@ fn rand_bebe_scratchpad() {
     let ex = BebeScratchpadExecutor;
     let pat = FixedPattern::new(Pattern::rand(size.depth as u64 * 8), size, 151);
     execute(pat, ex).expect("failed to run random pattern");
+}
+
+#[test]
+#[ignore = "requires test chip"]
+fn sweep_tdc_sram_2() {
+    sweep_tdc_test(2, 0, 127);
 }
