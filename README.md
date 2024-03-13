@@ -457,6 +457,43 @@ Sky130EFIO: Generated 1 no-conn IO cells/pads
 
 ## Log
 
+### 3/12/24
+
+- Ran test with PPG at 15 MHz.
+- Internal delay shows the following code on the TDC:
+```
+[bebe host] read result:
+FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF   ................
+FF FF FF FF FF FF FF FF FF 0F 00 00 00 00 00 00   ................
+```
+- SRAM 2 address 16 reads the following after writing `0xDEADBEEF` with internal delay:
+```
+[bebe host] read result:
+BF 8F FF BE 00 00 00 00                           ........
+````
+
+After writing `0xCAFEF00D`:
+```
+[bebe host] read result:
+BF AF FF BE 00 00 00 00                           ........
+```
+- Range of delays that correspond to the same code on the PPG: 9.242 ns - 9.279 ns. Was unable to reproduce similar read output, always received the following:
+```
+[bebe host] read result:
+FF FF FF FF 00 00 00 00                           ........
+```
+- Code boundaries:
+```
+FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF   ................ Min: 9.161
+FF FF FF FF FF FF FF FF FF 03 00 00 00 00 00 00   ................ Max: 9.202
+
+FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF   ................ Min: 9.203
+FF FF FF FF FF FF FF FF FF 07 00 00 00 00 00 00   ................ Max: 9.241
+
+FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF   ................ Min: 9.242
+FF FF FF FF FF FF FF FF FF 07 00 00 00 00 00 00   ................ Max: 9.279
+```
+
 ### 2/15/24
 
 - Ran preliminary tests on the delay lines and TDCs. Was able to see changing TDC code in
